@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CUREd. - Your Partner in Global Pharmaceutical Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #f0f9ff;
+            --bg-secondary: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --accent-primary: #38bdf8;
+            --accent-secondary: #2dd4bf;
+            --border-color: #e2e8f0;
+            --shadow-color: rgba(56, 189, 248, 0.15);
+            --gradient-1-start: #f0f9ff;
+            --gradient-1-end: #e0f2fe;
+            --gradient-2-start: #ffffff;
+            --gradient-2-end: #f0fdfa;
+            --deco-opacity: 0.25;
+        }
+        .dark {
+            --bg-primary: #475e67;
+            --bg-secondary: #3a4b53;
+            --text-primary: #e0edee;
+            --text-secondary: #a4b4be;
+            --accent-primary: #a4b4be;
+            --accent-secondary: #eae1d0;
+            --border-color: #5a6e78;
+            --shadow-color: rgba(0, 0, 0, 0.25);
+            --gradient-1-start: #475e67;
+            --gradient-1-end: #3f525a;
+            --gradient-2-start: #3a4b53;
+            --gradient-2-end: #324148;
+            --deco-opacity: 0.05;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .bg-primary { background-color: var(--bg-primary); }
+        .bg-secondary { background-color: var(--bg-secondary); }
+        .text-primary { color: var(--text-primary); }
+        .text-secondary { color: var(--text-secondary); }
+        .border-themed { border-color: var(--border-color); }
+        .accent-gradient { background-image: linear-gradient(to right, var(--accent-primary), var(--accent-secondary)); }
+        * { transition: all 0.3s ease-in-out; }
+        .hamburger .line { transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out; }
+        .hamburger.open .line1 { transform: translateY(8px) rotate(45deg); }
+        .hamburger.open .line2 { opacity: 0; }
+        .hamburger.open .line3 { transform: translateY(-8px) rotate(-45deg); }
+        #sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        #sidebar.open { transform: translateX(0); }
+        #sidebar .nav-link {
+            display: block; padding: 0.5rem 1rem; margin: 0 -1rem;
+            border-radius: 0.5rem; position: relative; z-index: 1;
+        }
+        #sidebar .nav-link:hover { color: white; }
+        #sidebar .nav-link::before {
+            content: ''; position: absolute; inset: 0; border-radius: 0.5rem;
+            background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+            opacity: 0; transform: scaleX(0); transform-origin: left;
+            transition: opacity 0.3s, transform 0.3s; z-index: -1;
+        }
+        #sidebar .nav-link:hover::before { opacity: 1; transform: scaleX(1); }
+        .reveal {
+            opacity: 0; transform: translateY(50px) scale(0.95) rotate(-1deg);
+            transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+        #animated-phrase::after {
+            content: '|'; display: inline-block; animation: blink 0.7s infinite;
+            color: var(--accent-secondary);
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+        .product-card .details {
+            opacity: 0; transform: translateY(20px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .product-card:hover .initial-info { opacity: 0; transform: translateY(-20px); }
+        .product-card:hover .details { opacity: 1; transform: translateY(0); }
+        .product-card.is-hiding { transform: scale(0.9); opacity: 0; }
+        .bg-text-primary { background-color: var(--text-primary); }
+        .interactive-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px var(--shadow-color);
+        }
+        #scroll-progress-bar {
+            position: fixed; top: 0; left: 0; height: 4px; width: 0%; z-index: 100;
+            background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+            transition: width 0.1s linear;
+        }
+        .gradient-bg-1 { background-image: linear-gradient(to bottom right, var(--gradient-1-start), var(--gradient-1-end)); }
+        .gradient-bg-2 { background-image: linear-gradient(to bottom right, var(--gradient-2-start), var(--gradient-2-end)); }
+        .form-error {
+            color: #ef4444; font-size: 0.875rem; height: 1rem; margin-top: 0.25rem;
+            transition: opacity 0.3s;
+        }
+        input.invalid, textarea.invalid, select.invalid {
+             border-color: #ef4444;
+             box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+        }
+        .deco-svg {
+            position: absolute; opacity: var(--deco-opacity); color: var(--accent-primary);
+            z-index: 0; pointer-events: none;
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .story-visual {
+            opacity: 0; transition: opacity 0.5s ease-in-out; position: absolute;
+            width: 100%; height: 100%;
+        }
+        .story-visual.active { opacity: 1; }
+        .story-text-content span { transition: color 0.5s ease; color: var(--text-secondary); }
+        .story-text-content span.highlight { color: var(--text-primary); }
+        #product-filters button:not(.active-filter):hover {
+            background-color: var(--accent-primary); color: var(--bg-secondary);
+            border-color: var(--accent-primary);
+        }
+        .timeline-point { transition: transform 0.3s ease; }
+        .timeline-item:hover .timeline-point { transform: scale(1.5); }
+        .team-member-name {
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+        .interactive-card:hover .team-member-name {
+            color: transparent;
+            background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+        }
+        .inline-icon {
+            display: inline-block;
+            width: 1.25em;
+            height: 1.25em;
+            margin-right: 0.5em;
+            vertical-align: -0.25em;
+            color: var(--accent-secondary);
+        }
+    </style>
+</head>
+<body class="bg-primary text-primary overflow-x-hidden">
+
+    <div id="scroll-progress-bar"></div>
+
+    <svg width="0" height="0" style="position:absolute">
+      <defs>
+        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:var(--accent-primary);" />
+          <stop offset="100%" style="stop-color:var(--accent-secondary);" />
+        </linearGradient>
+      </defs>
+    </svg>
+
+    <header class="fixed top-0 left-0 right-0 z-50 bg-primary/80 backdrop-blur-sm shadow-md">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="#home-section" class="text-3xl font-bold nav-link">
+                <span class="text-primary">CURE</span><sup class="accent-gradient text-transparent bg-clip-text">d.</sup>
+            </a>
+            <div class="flex items-center space-x-4">
+                <button id="theme-toggle" class="p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-primary focus:ring-offset-primary">
+                    <svg id="theme-icon-light" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg id="theme-icon-dark" class="h-6 w-6 text-primary hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                </button>
+                <button id="hamburger-button" class="hamburger z-50 w-8 h-6 flex flex-col justify-between items-center">
+                    <span class="line line1 block w-full h-0.5 bg-text-primary rounded"></span>
+                    <span class="line line2 block w-full h-0.5 bg-text-primary rounded"></span>
+                    <span class="line line3 block w-full h-0.5 bg-text-primary rounded"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <nav id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-secondary shadow-2xl z-40 pt-24 p-6 overflow-y-auto">
+        <ul class="space-y-4">
+            <li><a href="#home-section" class="nav-link text-lg font-semibold">Home</a></li>
+            <li><a href="#factory-section" class="nav-link text-lg font-semibold">Our Factory</a></li>
+            <li><a href="#logistics-section" class="nav-link text-lg font-semibold">Logistics</a></li>
+            <li><a href="#products-section" class="nav-link text-lg font-semibold">Products</a></li>
+            <li><a href="#clients-section" class="nav-link text-lg font-semibold">Clients</a></li>
+            <li><a href="#news-section" class="nav-link text-lg font-semibold">News & Media</a></li>
+            <li><a href="#about-section" class="nav-link text-lg font-semibold">About Us</a></li>
+            <li><a href="#contact-section" class="nav-link text-lg font-semibold">Contact Us</a></li>
+        </ul>
+    </nav>
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 hidden"></div>
+
+    <main id="main-content" class="pt-16">
+        
+        <section id="home-section" class="page-section gradient-bg-1 overflow-hidden">
+            <div class="relative min-h-screen flex items-center justify-center">
+                <div class="absolute inset-0 z-0" style="background-image: radial-gradient(circle at top left, var(--accent-primary) 0%, transparent 40%), radial-gradient(circle at bottom right, var(--accent-secondary) 0%, transparent 50%);"></div>
+                <div class="relative z-10 text-center px-4">
+                    <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold text-primary mb-4">
+                        CURE<sup class="accent-gradient text-transparent bg-clip-text">d.</sup> 
+                        <span id="animated-phrase" class="accent-gradient text-transparent bg-clip-text"></span>
+                    </h1>
+                    <p class="text-xl md:text-2xl text-secondary max-w-3xl mx-auto">Your Partner in Global Pharmaceutical Solutions.</p>
+                </div>
+            </div>
+
+            <div id="why-cured" class="relative py-20 lg:py-32 overflow-hidden gradient-bg-2">
+                 <svg class="deco-svg -top-10 left-1/4 w-24 h-24" viewBox="0 0 100 100" fill="currentColor"><path d="M50,0 A50,25 0 0,0 50,50 A50,25 0 0,0 50,0 Z M50,50 A50,25 0 0,0 50,100 A50,25 0 0,0 50,50 Z"/></svg>
+                 <svg class="deco-svg top-1/2 -right-10 w-48 h-48" viewBox="0 0 100 100" fill="currentColor"><path d="M50 0 C75 25, 75 75, 50 100 C25 75, 25 25, 50 0 Z"></path></svg>
+                <div class="container mx-auto px-6 relative z-10">
+                    <div class="text-center mb-16">
+                        <h2 class="text-4xl md:text-5xl font-bold reveal accent-gradient text-transparent bg-clip-text">Our Purpose.</h2>
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-16 items-start">
+                        <div class="md:w-1/2 text-lg space-y-8 story-text-content md:sticky top-32">
+                             <p class="reveal">
+                                <span class="story-text highlight" data-story="1">At CURE<sup>d.</sup>, our purpose is simple but profound: to create a healthier world, one community at a time.</span>
+                                <span class="story-text" data-story="2">We're driven by the conviction that everyone, regardless of where they live, deserves access to quality, life-saving medicine.</span>
+                             </p>
+                            <p class="reveal" data-delay="200">
+                                <span class="story-text" data-story="3">This isn't just business; it's our promise to patients everywhere. From our research labs to the last mile of delivery, every step is guided by a commitment to integrity, innovation, and compassion.</span>
+                            </p>
+                        </div>
+                        <div class="md:w-1/2 h-auto md:h-screen">
+                            <div id="story-visuals" class="w-full h-full md:sticky top-32">
+                                <!-- Story Visuals will be injected here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="story-triggers">
+                    <div class="h-1/3" data-story="1"></div>
+                    <div class="h-1/3" data-story="2"></div>
+                    <div class="h-1/3" data-story="3"></div>
+                </div>
+            </div>
+
+             <!-- VIDEO SECTION -->
+            <section id="product-video-section" class="relative py-20 lg:py-24 gradient-bg-1 overflow-hidden">
+                <svg class="deco-svg bottom-0 -left-16 w-64 h-64" viewBox="0 0 100 100" fill="currentColor"><path d="M50 10 a 40 40 0 0 0 0 80 a 40 40 0 0 0 0 -80 M50 20 a 30 30 0 0 1 0 60 a 30 30 0 0 1 0 -60"/></svg>
+                <div class="container mx-auto px-6 relative z-10">
+                    <div class="text-center mb-12 reveal">
+                        <h2 class="text-4xl md:text-5xl font-bold accent-gradient text-transparent bg-clip-text">See Our Innovation in Action</h2>
+                        <p class="mt-4 text-lg text-secondary max-w-3xl mx-auto">A glimpse into the precision and care behind every product we create.</p>
+                    </div>
+                    <div class="max-w-4xl mx-auto aspect-video bg-secondary/50 rounded-lg shadow-2xl flex items-center justify-center reveal" data-delay="200">
+                        <div class="text-center text-secondary">
+                            <svg class="w-24 h-24 mx-auto" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
+                            <p class="mt-4 font-semibold text-xl">Product Video Here</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div id="certifications" class="relative py-20 lg:py-24 gradient-bg-2 overflow-hidden">
+                <svg class="deco-svg top-0 -right-24 w-72 h-72" viewBox="0 0 100 100" fill="currentColor"><path d="M50 10 L60 40 L90 40 L65 60 L75 90 L50 70 L25 90 L35 60 L10 40 L40 40 Z"/></svg>
+                <div class="container mx-auto px-6 relative z-10">
+                    <div class="text-center mb-12">
+                        <h2 class="text-4xl md:text-5xl font-bold reveal accent-gradient text-transparent bg-clip-text">Our Commitment to Quality.</h2>
+                        <p class="text-lg text-secondary mt-4 max-w-3xl mx-auto reveal" data-delay="200">
+                            Building trust is at the core of our business. Our relentless focus on quality and safety is backed by the industry's most respected certifications, ensuring every product we ship meets the highest global standards.
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8">
+                        <div class="group relative flex flex-col items-center text-center p-6 bg-primary rounded-lg shadow-lg reveal interactive-card">
+                            <svg class="h-16 w-16 text-secondary mb-3" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18v2H3V3m0 4h18v2H3V7m0 4h18v2H3v-2m0 4h18v2H3v-2m0 4h18v2H3v-2z"/></svg>
+                            <h3 class="font-bold text-lg">FDA Approved</h3>
+                            <div class="absolute bottom-full mb-2 w-48 p-2 text-sm text-primary bg-secondary rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">Compliant with U.S. Food and Drug Administration standards for safety and efficacy.</div>
+                        </div>
+                        <div class="group relative flex flex-col items-center text-center p-6 bg-primary rounded-lg shadow-lg reveal interactive-card" data-delay="100">
+                            <svg class="h-16 w-16 text-secondary mb-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 9l4 1.5V15h14v-4.5L23 9l-11-7zm0 2.48L19.5 9h-15L12 4.48zM9 13v-2h6v2H9z"/></svg>
+                            <h3 class="font-bold text-lg">GMP Certified</h3>
+                            <div class="absolute bottom-full mb-2 w-48 p-2 text-sm text-primary bg-secondary rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">Adheres to Good Manufacturing Practices, ensuring consistent quality production.</div>
+                        </div>
+                        <div class="group relative flex flex-col items-center text-center p-6 bg-primary rounded-lg shadow-lg reveal interactive-card" data-delay="200">
+                            <svg class="h-16 w-16 text-secondary mb-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-2 15l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                            <h3 class="font-bold text-lg">ISO 9001</h3>
+                            <div class="absolute bottom-full mb-2 w-48 p-2 text-sm text-primary bg-secondary rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">Follows the international standard for a quality management system.</div>
+                        </div>
+                        <div class="group relative flex flex-col items-center text-center p-6 bg-primary rounded-lg shadow-lg reveal interactive-card" data-delay="300">
+                            <svg class="h-16 w-16 text-secondary mb-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17H9V9h2v10zm4 0h-2V9h2v10z"/></svg>
+                            <h3 class="font-bold text-lg">WHO Prequalified</h3>
+                            <div class="absolute bottom-full mb-2 w-48 p-2 text-sm text-primary bg-secondary rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">Meets World Health Organization standards for global supply.</div>
+                        </div>
+                        <div class="group relative flex flex-col items-center text-center p-6 bg-primary rounded-lg shadow-lg reveal interactive-card" data-delay="400">
+                             <svg class="h-16 w-16 text-secondary mb-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l-10 9h2v9h16v-9h2L12 2zm0 2.69L17.31 9H6.69L12 4.69zM8 11h8v7H8v-7z"/></svg>
+                            <h3 class="font-bold text-lg">EMA Compliant</h3>
+                            <div class="absolute bottom-full mb-2 w-48 p-2 text-sm text-primary bg-secondary rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">Follows stringent European Medicines Agency regulations for market access.</div>
+                        </div>
+                        <div class="group relative flex flex-col items-center text-center p-6 bg-primary rounded-lg shadow-lg reveal interactive-card" data-delay="500">
+                            <svg class="h-16 w-16 text-secondary mb-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                            <h3 class="font-bold text-lg">CE Certified</h3>
+                            <div class="absolute bottom-full mb-2 w-48 p-2 text-sm text-primary bg-secondary rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">Conforms with health and safety standards for products sold within the EEA.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="factory-section" class="page-section py-20 lg:py-24 gradient-bg-1 overflow-hidden relative">
+             <svg class="deco-svg -bottom-20 -left-20 w-80 h-80" viewBox="0 0 100 100" fill="currentColor"><circle cx="50" cy="50" r="40" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="50" cy="50" r="20" fill="currentColor"/></svg>
+             <div class="container mx-auto px-6 relative z-10">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl md:text-5xl font-bold reveal accent-gradient text-transparent bg-clip-text">Our State-of-the-Art Facilities.</h2>
+                    <p class="text-lg text-secondary mt-4 max-w-4xl mx-auto reveal" data-delay="200">
+                        Welcome to the heart of CURE<sup>d.</sup>—our manufacturing facilities. We believe that the journey to a healthier world begins with a foundation of quality. Our factory is equipped with cutting-edge technology and is operated by a team of world-class scientists and engineers, adhering to the highest international standards.
+                    </p>
+                </div>
+                <div id="slideshow-container" class="relative max-w-4xl mx-auto rounded-lg overflow-hidden shadow-2xl reveal">
+                    <div id="slideshow" class="flex transition-transform duration-500 ease-in-out"></div>
+                    <button id="prev-slide" class="absolute top-1/2 left-4 -translate-y-1/2 bg-white/50 hover:bg-white/80 p-3 rounded-full shadow-lg text-gray-800"><i data-feather="chevron-left"></i></button>
+                    <button id="next-slide" class="absolute top-1/2 right-4 -translate-y-1/2 bg-white/50 hover:bg-white/80 p-3 rounded-full shadow-lg text-gray-800"><i data-feather="chevron-right"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <section id="logistics-section" class="page-section py-24 gradient-bg-2 overflow-hidden relative">
+             <svg class="deco-svg top-1/2 -right-24 w-72 h-72" viewBox="0 0 100 100" fill="currentColor"><path d="M10 50 L50 10 L90 50 L50 90 Z"/></svg>
+            <div class="container mx-auto px-6 relative z-10">
+                 <div class="text-center mb-12 reveal">
+                    <h2 class="text-4xl md:text-5xl font-bold accent-gradient text-transparent bg-clip-text">Seamless Logistics, Guaranteed Delivery.</h2>
+                    <p class="mt-4 text-lg text-secondary max-w-4xl mx-auto">
+                        Our dedicated in-house logistics team manages the entire supply chain, from our facility to your doorstep, ensuring your critical shipments arrive safely and on time, every time.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 mb-20">
+                    <div class="text-center p-8 bg-primary rounded-xl shadow-lg reveal interactive-card">
+                         <i data-feather="send" class="mx-auto w-12 h-12 text-transparent" style="stroke: url(#gradient); fill: none; stroke-width: 1.5;"></i>
+                        <h3 class="text-2xl font-bold mt-4">Air Freight</h3>
+                        <p class="mt-2 text-secondary">For urgent, high-value shipments that need to reach their destination swiftly.</p>
+                    </div>
+                     <div class="text-center p-8 bg-primary rounded-xl shadow-lg reveal interactive-card" data-delay="200">
+                         <i data-feather="anchor" class="mx-auto w-12 h-12 text-transparent" style="stroke: url(#gradient); fill: none; stroke-width: 1.5;"></i>
+                        <h3 class="text-2xl font-bold mt-4">Sea Freight</h3>
+                        <p class="mt-2 text-secondary">The most cost-effective option for large-volume orders, providing reliable transit.</p>
+                    </div>
+                     <div class="text-center p-8 bg-primary rounded-xl shadow-lg reveal interactive-card" data-delay="400">
+                         <i data-feather="truck" class="mx-auto w-12 h-12 text-transparent" style="stroke: url(#gradient); fill: none; stroke-width: 1.5;"></i>
+                        <h3 class="text-2xl font-bold mt-4">Land Transport</h3>
+                        <p class="mt-2 text-secondary">Ideal for secure domestic and regional deliveries, ensuring a traceable journey.</p>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="hidden md:block absolute top-0 left-1/2 w-0.5 h-full accent-gradient -translate-x-1/2"></div>
+                    <div class="space-y-16 md:space-y-0">
+                        <div class="flex flex-col md:flex-row items-center reveal md:space-x-8 timeline-item">
+                            <div class="md:w-1/2 md:pr-8 text-center md:text-right">
+                               <div class="inline-block p-4 bg-primary rounded-full shadow-md mb-4 md:mb-0"><i data-feather="check-square" class="w-8 h-8 text-secondary"></i></div>
+                                <h3 class="text-2xl font-bold">1. Order Confirmation</h3>
+                                <p class="text-secondary">We verify every order and prepare all necessary documentation.</p>
+                            </div>
+                            <div class="hidden md:block relative md:w-1/2"><div class="absolute -left-1.5 top-1/2 w-4 h-4 bg-primary border-2 border-accent-primary rounded-full timeline-point"></div></div>
+                        </div>
+                         <div class="flex flex-col md:flex-row-reverse items-center reveal md:space-x-8 md:space-x-reverse mt-16 timeline-item">
+                            <div class="md:w-1/2 md:pl-8 text-center md:text-left">
+                               <div class="inline-block p-4 bg-primary rounded-full shadow-md mb-4 md:mb-0"><i data-feather="box" class="w-8 h-8 text-secondary"></i></div>
+                                <h3 class="text-2xl font-bold">2. Inspection & Packaging</h3>
+                                <p class="text-secondary">Final quality check and sealed in tamper-proof, temperature-controlled packaging.</p>
+                            </div>
+                            <div class="hidden md:block relative md:w-1/2"><div class="absolute -right-1.5 top-1/2 w-4 h-4 bg-primary border-2 border-accent-primary rounded-full timeline-point"></div></div>
+                        </div>
+                        <div class="flex flex-col md:flex-row items-center reveal md:space-x-8 mt-16 timeline-item">
+                             <div class="md:w-1/2 md:pr-8 text-center md:text-right">
+                               <div class="inline-block p-4 bg-primary rounded-full shadow-md mb-4 md:mb-0"><i data-feather="navigation" class="w-8 h-8 text-secondary"></i></div>
+                                <h3 class="text-2xl font-bold">3. Dispatch & Loading</h3>
+                                <p class="text-secondary">Efficient loading and dispatch from our certified facility, ensuring an on-time journey.</p>
+                            </div>
+                            <div class="hidden md:block relative md:w-1/2"><div class="absolute -left-1.5 top-1/2 w-4 h-4 bg-primary border-2 border-accent-primary rounded-full timeline-point"></div></div>
+                        </div>
+                         <div class="flex flex-col md:flex-row-reverse items-center reveal md:space-x-8 md:space-x-reverse mt-16 timeline-item">
+                            <div class="md:w-1/2 md:pl-8 text-center md:text-left">
+                               <div class="inline-block p-4 bg-primary rounded-full shadow-md mb-4 md:mb-0"><i data-feather="map-pin" class="w-8 h-8 text-secondary"></i></div>
+                                <h3 class="text-2xl font-bold">4. Real-time Tracking</h3>
+                                <p class="text-secondary">Track your shipment's progress from our warehouse to its final destination.</p>
+                            </div>
+                            <div class="hidden md:block relative md:w-1/2"><div class="absolute -right-1.5 top-1/2 w-4 h-4 bg-primary border-2 border-accent-primary rounded-full timeline-point"></div></div>
+                        </div>
+                        <div class="flex flex-col md:flex-row items-center reveal md:space-x-8 mt-16 timeline-item">
+                            <div class="md:w-1/2 md:pr-8 text-center md:text-right">
+                               <div class="inline-block p-4 bg-primary rounded-full shadow-md mb-4 md:mb-0"><i data-feather="shield" class="w-8 h-8 text-secondary"></i></div>
+                                <h3 class="text-2xl font-bold">5. Customs Clearance</h3>
+                                <p class="text-secondary">Our team handles all customs documentation for a seamless process.</p>
+                            </div>
+                            <div class="hidden md:block relative md:w-1/2"><div class="absolute -left-1.5 top-1/2 w-4 h-4 bg-primary border-2 border-accent-primary rounded-full timeline-point"></div></div>
+                        </div>
+                         <div class="flex flex-col md:flex-row-reverse items-center reveal md:space-x-8 md:space-x-reverse mt-16 timeline-item">
+                            <div class="md:w-1/2 md:pl-8 text-center md:text-left">
+                               <div class="inline-block p-4 bg-primary rounded-full shadow-md mb-4 md:mb-0"><i data-feather="package" class="w-8 h-8 text-secondary"></i></div>
+                                <h3 class="text-2xl font-bold">6. Final Secure Delivery</h3>
+                                <p class="text-secondary">Your order is delivered directly to your location with the utmost security and care.</p>
+                            </div>
+                            <div class="hidden md:block relative md:w-1/2"><div class="absolute -right-1.5 top-1/2 w-4 h-4 bg-primary border-2 border-accent-primary rounded-full timeline-point"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="products-section" class="page-section py-20 lg:py-24 gradient-bg-1 overflow-hidden relative">
+            <svg class="deco-svg top-0 left-0 w-96 h-96" viewBox="0 0 100 100" fill="currentColor"><path d="M0 0 H50 A50 50 0 0 1 0 50 Z"/></svg>
+             <svg class="deco-svg bottom-0 right-0 w-64 h-64" viewBox="0 0 100 100" fill="currentColor"><circle cx="50" cy="50" r="50"/></svg>
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="text-center mb-8">
+                    <h2 class="text-4xl md:text-5xl font-bold reveal accent-gradient text-transparent bg-clip-text">Our Product Portfolio</h2>
+                    <p class="text-lg text-secondary mt-4 max-w-3xl mx-auto reveal" data-delay="200">Explore our comprehensive range of pharmaceutical products, crafted with quality and care.</p>
+                </div>
+                <div id="product-filters" class="flex flex-wrap justify-center gap-2 mb-12 reveal"></div>
+                <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
+            </div>
+        </section>
+
+        <section id="clients-section" class="page-section py-20 lg:py-24 gradient-bg-2 overflow-hidden relative">
+            <svg class="deco-svg -bottom-20 -right-20 w-80 h-80" viewBox="0 0 100 100" fill="currentColor"><rect x="0" y="0" width="80" height="80" rx="40" /></svg>
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-bold reveal accent-gradient text-transparent bg-clip-text">Trusted by Partners Worldwide</h2>
+                    <p class="text-lg text-secondary mt-4 max-w-3xl mx-auto reveal" data-delay="200">We are proud to collaborate with leading healthcare organizations to deliver quality medicine globally.</p>
+                </div>
+                <div id="client-logos-grid" class="grid grid-cols-2 md:grid-cols-4 gap-8 items-center max-w-5xl mx-auto mb-20"></div>
+                <div id="testimonial-carousel-container" class="relative max-w-4xl mx-auto reveal">
+                    <div id="testimonial-carousel" class="flex overflow-hidden w-full"></div>
+                    <button id="prev-testimonial" class="absolute top-1/2 -left-4 md:-left-8 -translate-y-1/2 bg-primary hover:accent-gradient p-3 rounded-full shadow-lg"><i data-feather="chevron-left"></i></button>
+                    <button id="next-testimonial" class="absolute top-1/2 -right-4 md:-right-8 -translate-y-1/2 bg-primary hover:accent-gradient p-3 rounded-full shadow-lg"><i data-feather="chevron-right"></i></button>
+                    <div id="testimonial-dots" class="flex justify-center mt-6 space-x-2"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="news-section" class="page-section py-24 gradient-bg-1 overflow-hidden relative">
+             <svg class="deco-svg -top-20 -left-20 w-80 h-80" viewBox="0 0 100 100" fill="currentColor"><path d="M50 0 L100 50 L50 100 L0 50 Z"/></svg>
+             <div class="container mx-auto px-6 relative z-10">
+                <div class="text-center mb-12 reveal">
+                    <h2 class="text-4xl md:text-5xl font-bold accent-gradient text-transparent bg-clip-text">News & Media.</h2>
+                    <p class="mt-4 text-lg text-secondary max-w-3xl mx-auto">
+                        Stay informed about our latest research, partnerships, and breakthroughs in healthcare.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- News Card 1 -->
+                    <div class="bg-secondary rounded-xl shadow-lg overflow-hidden reveal interactive-card">
+                        <img src="https://placehold.co/600x400/a4b4be/ffffff?text=Global+Summit" alt="News Image 1" class="w-full h-56 object-cover">
+                        <div class="p-6">
+                            <p class="text-sm text-secondary mb-2">October 26, 2025</p>
+                            <h3 class="text-xl font-bold mb-2">CURE<sup>d.</sup> to Unveil New Research at Global Health Summit</h3>
+                            <p class="text-secondary mb-4">Our lead scientists are set to present groundbreaking research on a new, non-invasive treatment for chronic inflammation...</p>
+                            <a href="#news-article-placeholder" class="font-semibold accent-gradient text-transparent bg-clip-text hover:underline">Read More →</a>
+                        </div>
+                    </div>
+                    <!-- News Card 2 -->
+                    <div class="bg-secondary rounded-xl shadow-lg overflow-hidden reveal interactive-card" data-delay="200">
+                        <img src="https://placehold.co/600x400/dcc8bc/ffffff?text=Partnership" alt="News Image 2" class="w-full h-56 object-cover">
+                        <div class="p-6">
+                            <p class="text-sm text-secondary mb-2">September 15, 2025</p>
+                            <h3 class="text-xl font-bold mb-2">Our Partnership with the WHO to Expand Access</h3>
+                            <p class="text-secondary mb-4">We are thrilled to announce a new strategic partnership with the World Health Organization to expand access to essential medicines...</p>
+                             <a href="#news-article-placeholder" class="font-semibold accent-gradient text-transparent bg-clip-text hover:underline">Read More →</a>
+                        </div>
+                    </div>
+                    <!-- News Card 3 -->
+                    <div class="bg-secondary rounded-xl shadow-lg overflow-hidden reveal interactive-card" data-delay="400">
+                        <img src="https://placehold.co/600x400/a4b4be/ffffff?text=Breakthrough" alt="News Image 3" class="w-full h-56 object-cover">
+                        <div class="p-6">
+                            <p class="text-sm text-secondary mb-2">August 01, 2025</p>
+                            <h3 class="text-xl font-bold mb-2">Breakthrough in Diabetes Care: The Launch of CURE<sup>d.</sup>-Metformin</h3>
+                            <p class="text-secondary mb-4">The official launch of our next-generation Metformin formulation marks a new chapter in the fight against type 2 diabetes...</p>
+                             <a href="#news-article-placeholder" class="font-semibold accent-gradient text-transparent bg-clip-text hover:underline">Read More →</a>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Placeholder for full article view -->
+                <div id="news-article-placeholder" class="mt-24 pt-12 border-t border-themed reveal">
+                    <h3 class="text-3xl font-bold text-center">Full Article Content</h3>
+                    <p class="mt-4 text-center text-secondary">When a "Read More" link is clicked, the full article content would be displayed here. For this demo, this is a placeholder section.</p>
+                </div>
+             </div>
+        </section>
+        
+        <section id="about-section" class="page-section py-24 gradient-bg-2 overflow-hidden relative">
+            <svg class="deco-svg top-1/2 -left-24 w-72 h-72" viewBox="0 0 100 100" fill="currentColor"><path d="M50 0 C100 0, 100 100, 50 100 C0 100, 0 0, 50 0 Z"/></svg>
+            <div class="container mx-auto px-6 relative z-10">
+                <!-- Company Story -->
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-4xl md:text-5xl font-bold accent-gradient text-transparent bg-clip-text">About CURE<sup>d.</sup></h2>
+                    <p class="mt-4 text-lg text-secondary max-w-4xl mx-auto">
+                        Founded in 2010, CURE<sup>d.</sup> emerged from a collective desire to make a tangible difference in global health. Our journey began with dedicated scientists who believed innovation and compassion could overcome healthcare challenges. Our vision for the future is to pioneer personalized medicine, leveraging AI and genetic research to create treatments tailored to individual patient needs, making healthcare not just accessible, but truly effective for everyone.
+                    </p>
+                </div>
+
+                <!-- Core Values -->
+                 <h3 class="text-3xl font-bold text-center text-primary mb-12 reveal accent-gradient text-transparent bg-clip-text">Our Core Values</h3>
+                <div class="grid md:grid-cols-3 gap-8 text-center mb-20">
+                    <div class="reveal interactive-card bg-primary p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold flex items-center justify-center">
+                            <svg class="inline-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                            Integrity
+                        </h3>
+                        <p class="mt-2 text-secondary">Upholding the highest ethical standards in everything we do.</p>
+                    </div>
+                    <div class="reveal interactive-card bg-primary p-8 rounded-xl shadow-lg" data-delay="200">
+                        <h3 class="text-2xl font-bold flex items-center justify-center">
+                            <svg class="inline-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                            Innovation
+                        </h3>
+                        <p class="mt-2 text-secondary">Constantly pushing the boundaries of science to find better solutions.</p>
+                    </div>
+                    <div class="reveal interactive-card bg-primary p-8 rounded-xl shadow-lg" data-delay="400">
+                        <h3 class="text-2xl font-bold flex items-center justify-center">
+                            <svg class="inline-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                            Compassion
+                        </h3>
+                        <p class="mt-2 text-secondary">Placing the well-being of patients at the center of our work.</p>
+                    </div>
+                </div>
+
+                <!-- Meet the Team -->
+                <div class="text-center mb-12 reveal">
+                     <h2 class="text-3xl font-bold accent-gradient text-transparent bg-clip-text">Meet Our Team</h2>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Team Member Card -->
+                    <div class="group relative text-center reveal interactive-card">
+                        <img src="https://placehold.co/400x400/a4b4be/ffffff?text=ER" alt="Team Member 1" class="rounded-full w-48 h-48 mx-auto shadow-lg">
+                        <h3 class="text-xl font-bold mt-4 team-member-name">Dr. Evelyn Reed</h3>
+                        <p class="text-secondary">Founder & CEO</p>
+                        <div class="absolute inset-0 bg-black/80 flex items-center justify-center p-4 text-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
+                           <p class="text-sm">With 30 years in pharmacology, Dr. Reed's vision drives our mission to innovate for global health.</p>
+                       </div>
+                    </div>
+                    <div class="group relative text-center reveal interactive-card" data-delay="200">
+                        <img src="https://placehold.co/400x400/dcc8bc/ffffff?text=BC" alt="Team Member 2" class="rounded-full w-48 h-48 mx-auto shadow-lg">
+                        <h3 class="text-xl font-bold mt-4 team-member-name">Ben Carter</h3>
+                        <p class="text-secondary">Head of R&D</p>
+                        <div class="absolute inset-0 bg-black/80 flex items-center justify-center p-4 text-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
+                           <p class="text-sm">Ben leads our brilliant team of scientists in discovering the next generation of life-saving medicines.</p>
+                       </div>
+                    </div>
+                    <div class="group relative text-center reveal interactive-card" data-delay="400">
+                        <img src="https://placehold.co/400x400/a4b4be/ffffff?text=MR" alt="Team Member 3" class="rounded-full w-48 h-48 mx-auto shadow-lg">
+                        <h3 class="text-xl font-bold mt-4 team-member-name">Maria Rodriguez</h3>
+                        <p class="text-secondary">Chief Operating Officer</p>
+                        <div class="absolute inset-0 bg-black/80 flex items-center justify-center p-4 text-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
+                           <p class="text-sm">Maria ensures our operations run with the precision and efficiency required to meet global demand.</p>
+                       </div>
+                    </div>
+                    <div class="group relative text-center reveal interactive-card" data-delay="600">
+                        <img src="https://placehold.co/400x400/dcc8bc/ffffff?text=KT" alt="Team Member 4" class="rounded-full w-48 h-48 mx-auto shadow-lg">
+                        <h3 class="text-xl font-bold mt-4 team-member-name">Kenji Tanaka</h3>
+                        <p class="text-secondary">Director of Global Logistics</p>
+                        <div class="absolute inset-0 bg-black/80 flex items-center justify-center p-4 text-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
+                           <p class="text-sm">Kenji is the mastermind behind our flawless supply chain, ensuring medicine reaches every corner of the world.</p>
+                       </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact-section" class="page-section py-20 lg:py-24 gradient-bg-1 overflow-hidden relative">
+             <svg class="deco-svg -bottom-24 -right-24 w-96 h-96" viewBox="0 0 100 100" fill="currentColor"><path d="M50 100 C 100 100 100 0 50 0 S 0 0 0 100 Z" /></svg>
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-bold reveal accent-gradient text-transparent bg-clip-text">Connect With Us</h2>
+                    <p class="text-lg text-secondary mt-4 max-w-3xl mx-auto reveal" data-delay="200">We're here to help. Whether you have a question, a partnership proposal, or need a quote, our team is ready to assist you.</p>
+                    <div class="grid md:grid-cols-3 gap-6 mt-10 max-w-5xl mx-auto">
+                        <a href="#contact-form-container" class="contact-scroll-link bg-secondary p-6 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 reveal"><h3 class="text-xl font-bold">Get a Quote</h3></a>
+                        <a href="#contact-form-container" class="contact-scroll-link bg-secondary p-6 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 reveal" data-delay="200"><h3 class="text-xl font-bold">Reach Out</h3></a>
+                        <a href="#contact-form-container" class="contact-scroll-link bg-secondary p-6 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 reveal" data-delay="400"><h3 class="text-xl font-bold">Talk to Our Team</h3></a>
+                    </div>
+                </div>
+                <div class="grid lg:grid-cols-5 gap-12 my-20">
+                    <div class="lg:col-span-2 reveal">
+                        <h3 class="text-3xl font-bold text-primary mb-4">Export & Licensing</h3>
+                        <p class="text-secondary mb-6">Our expertise in global logistics ensures a smooth, compliant, and efficient process from our facility to your doorstep.</p>
+                        <h4 class="text-xl font-semibold text-primary mb-2">Compliance</h4>
+                        <p class="text-secondary mb-4">We strictly adhere to international standards set by the FDA, EMA, WHO, and other key regulatory bodies.</p>
+                        <h4 class="text-xl font-semibold text-primary mb-2">Documentation</h4>
+                        <ul class="list-disc list-inside text-secondary space-y-1">
+                            <li>Certificate of Analysis (COA)</li>
+                            <li>Certificate of Origin (COO)</li>
+                            <li>GMP Certificates</li>
+                        </ul>
+                    </div>
+                    <div class="lg:col-span-3 reveal" data-delay="200">
+                        <h4 class="text-xl font-semibold text-primary mb-4">Our Export Process</h4>
+                        <ol class="list-decimal list-inside text-secondary space-y-4">
+                           <li><strong>Inquiry & Consultation:</strong> Understanding your specific needs and regulatory requirements.</li>
+                           <li><strong>Quotation & Agreement:</strong> Establishing a transparent quote and clear agreement.</li>
+                           <li><strong>Documentation & Compliance:</strong> Preparing all necessary export documentation for customs.</li>
+                           <li><strong>Packaging & Dispatch:</strong> Secure, temperature-controlled packaging and efficient dispatch.</li>
+                           <li><strong>Shipment & Tracking:</strong> We manage the shipment and provide you with real-time tracking.</li>
+                        </ol>
+                    </div>
+                </div>
+                <div id="contact-form-container" class="max-w-4xl mx-auto bg-secondary p-8 rounded-lg shadow-2xl reveal">
+                    <form id="contact-form" novalidate>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="relative">
+                                <label for="fullName" class="block text-sm font-medium text-secondary mb-1">Full Name</label>
+                                <input type="text" id="fullName" name="fullName" required class="w-full p-3 bg-primary border border-themed rounded-md focus:ring-2 focus:ring-accent-primary focus:outline-none">
+                                <div class="form-error"></div>
+                            </div>
+                            <div class="relative">
+                                <label for="email" class="block text-sm font-medium text-secondary mb-1">Email Address</label>
+                                <input type="email" id="email" name="email" required class="w-full p-3 bg-primary border border-themed rounded-md focus:ring-2 focus:ring-accent-primary focus:outline-none">
+                                <div class="form-error"></div>
+                            </div>
+                            <div>
+                                <label for="phone" class="block text-sm font-medium text-secondary mb-1">Phone (Optional)</label>
+                                <input type="tel" id="phone" name="phone" class="w-full p-3 bg-primary border border-themed rounded-md focus:ring-2 focus:ring-accent-primary focus:outline-none">
+                            </div>
+                             <div class="relative">
+                                <label for="companyName" class="block text-sm font-medium text-secondary mb-1">Company</label>
+                                <input type="text" id="companyName" name="companyName" required class="w-full p-3 bg-primary border border-themed rounded-md focus:ring-2 focus:ring-accent-primary focus:outline-none">
+                                <div class="form-error"></div>
+                            </div>
+                            <div class="md:col-span-2 relative">
+                                <label for="inquiryType" class="block text-sm font-medium text-secondary mb-1">Inquiry Type</label>
+                                <select id="inquiryType" name="inquiryType" required class="w-full p-3 bg-primary border border-themed rounded-md focus:ring-2 focus:ring-accent-primary focus:outline-none">
+                                    <option>General Inquiry</option>
+                                    <option>Partnership/Export Inquiry</option>
+                                    <option>Media Inquiry</option>
+                                    <option>Request a Quote</option>
+                                    <option>Logistics Inquiry</option>
+                                </select>
+                            </div>
+                            <div class="md:col-span-2 relative">
+                                <label for="message" class="block text-sm font-medium text-secondary mb-1">Message</label>
+                                <textarea id="message" name="message" rows="5" required class="w-full p-3 bg-primary border border-themed rounded-md focus:ring-2 focus:ring-accent-primary focus:outline-none"></textarea>
+                                <div class="form-error"></div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-6">
+                            <button type="submit" class="px-8 py-3 font-semibold text-white accent-gradient rounded-md hover:opacity-90 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-secondary">Submit</button>
+                        </div>
+                    </form>
+                    <div id="form-feedback" class="text-center mt-4 font-semibold"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer id="footer-section" class="bg-secondary text-secondary py-16 gradient-bg-2">
+        <div class="container mx-auto px-6 grid md:grid-cols-3 gap-8">
+            <div class="md:col-span-1">
+                <h3 class="text-2xl font-bold text-primary mb-4">CURE<sup>d.</sup></h3>
+                <p>123 Global Health Parkway, Suite 456<br>Health City, CA 90210</p>
+                <p>Phone: +1 (555) 123-4567</p>
+            </div>
+            <div class="md:col-span-2">
+                <h4 class="text-xl font-semibold text-primary mb-2">Our Origin</h4>
+                <p>CURE<sup>d.</sup> was founded on the unshakeable principle that quality healthcare is a universal right, not a privilege. Our journey began with a single vision: to bridge the gap in essential medicine access by innovating, producing, and distributing life-saving pharmaceuticals to communities across the globe. We are not just delivering pharmaceuticals; we're delivering on our promise to build a healthier, more equitable world, one life at a time.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const products = [
+                { category: 'Cardiovascular Health', name: 'CURE<sup>d.</sup>-Atorvastatin', description: 'A widely prescribed statin medication used to lower "bad" cholesterol and fats.' },
+                { category: "Men's Health", name: 'CURE<sup>d.</sup>-Sildenafil', description: 'A medication used to treat erectile dysfunction and pulmonary arterial hypertension.' },
+                { category: 'Infection Control', name: 'CURE<sup>d.</sup>-Amoxicillin', description: 'A common antibiotic used to treat a wide variety of bacterial infections.' },
+                { category: 'Thyroid Health', name: 'CURE<sup>d.</sup>-Levothyroxine', description: 'A medication used to treat an underactive thyroid gland (hypothyroidism).' },
+                { category: 'Diabetes Pills', name: 'CURE<sup>d.</sup>-Metformin', description: 'An oral medication used to treat type 2 diabetes by improving insulin response.' },
+                { category: 'Diabetes Pills', name: 'CURE<sup>d.</sup>-Glimepiride', description: 'An oral medication that works by causing the release of the body\'s natural insulin.' },
+                { category: 'Diabetes Pills', name: 'CURE<sup>d.</sup>-Sitagliptin', description: 'An oral medication to control high blood sugar in people with type 2 diabetes.' },
+                { category: "Women's Health", name: 'CURE<sup>d.</sup>-Femina', description: 'A supplement formulated to support women\'s hormonal balance and bone density.' },
+                { category: "Women's Health", name: 'CURE<sup>d.</sup>-Osteo', description: 'A vitamin and mineral supplement designed to promote strong bones.' },
+                { category: "Women's Health", name: 'CURE<sup>d.</sup>-Femcare', description: 'A broad-spectrum supplement to support women\'s overall wellness.' },
+                { category: "Men's Health", name: 'CURE<sup>d.</sup>-Prostacare', description: 'A formulation to support prostate health and urinary function in adult men.' },
+                { category: "Men's Health", name: 'CURE<sup>d.</sup>-Vitality', description: 'A daily multivitamin formulated to support men\'s energy and muscle function.' },
+                { category: "Men's Health", name: 'CURE<sup>d.</sup>-Testro', description: 'A dietary supplement to support natural testosterone levels.' },
+                { category: 'Analgesics, Anti-inflammatory & Antipyretics', name: 'CURE<sup>d.</sup>-Aspirin', description: 'A pain reliever and anti-inflammatory used to reduce fever and mild pain.' },
+                { category: 'Analgesics, Anti-inflammatory & Antipyretics', name: 'CURE<sup>d.</sup>-Paracetamol', description: 'A common painkiller used to treat aches and pains, and to lower a fever.' },
+                { category: 'Analgesics, Anti-inflammatory & Antipyretics', name: 'CURE<sup>d.</sup>-Ibuprofen', description: 'A non-steroidal anti-inflammatory drug (NSAID) used to relieve pain and swelling.' },
+                { category: 'Analgesics, Anti-inflammatory & Antipyretics', name: 'CURE<sup>d.</sup>-Diclofenac', description: 'An NSAID used to treat pain and inflammatory conditions such as gout.' },
+                { category: 'Gastrointestinal', name: 'CURE<sup>d.</sup>-Omeprazole', description: 'A proton pump inhibitor (PPI) used to treat acid reflux, heartburn, and ulcers.' },
+                { category: 'Cardiovascular Health', name: 'CURE<sup>d.</sup>-Lisinopril', description: 'An ACE inhibitor used to treat high blood pressure and heart failure.' },
+                { category: 'Antipsychotic & Antidepressant Drugs', name: 'CURE<sup>d.</sup>-Tiazid', description: 'A diuretic used to treat high blood pressure and fluid retention.' },
+                { category: 'Antipsychotic & Antidepressant Drugs', name: 'CURE<sup>d.</sup>-Levide', description: 'A medication used to treat certain mental and mood disorders.' },
+                { category: 'Antipsychotic & Antidepressant Drugs', name: 'CURE<sup>d.</sup>-Sulprin', description: 'An antipsychotic medication used to treat schizophrenia and other mood disorders.' },
+                { category: 'Antipsychotic & Antidepressant Drugs', name: 'CURE<sup>d.</sup>-Ariaz', description: 'An atypical antipsychotic used to treat conditions like schizophrenia and bipolar disorder.' },
+                { category: 'Antipsychotic & Antidepressant Drugs', name: 'CURE<sup>d.</sup>-Depram', description: 'An antidepressant used to treat depression and anxiety disorders.' },
+                { category: 'Antipsychotic & Antidepressant Drugs', name: 'CURE<sup>d.</sup>-Flutax', description: 'An antidepressant used to treat major depressive disorder and panic disorder.' },
+                { category: 'Antipsychotic & Antidepressant Drugs', name: 'CURE<sup>d.</sup>-Zapex', description: 'An antipsychotic medication used to treat schizophrenia and bipolar disorder.' },
+                { category: 'Antipsychotic & Antidepressant Drugs', name: 'CURE<sup>d.</sup>-Quetiz', description: 'An atypical antipsychotic used to treat schizophrenia and bipolar disorder.' },
+                { category: 'Antipsychotic & Antidepressant Drugs', name: 'CURE<sup>d.</sup>-Risonex', description: 'An antipsychotic medication used to treat schizophrenia and bipolar disorder.' }
+            ];
+            
+            const testimonials = [
+                { name: "Sarah Chen", role: "Director of Procurement, Global Pharma Inc.", quote: "CURE<sup>d.</sup> has been an invaluable partner. Their logistics are flawless, and their commitment to quality is evident in every single shipment.", image: "https://placehold.co/100x100/a4b4be/ffffff?text=SC" },
+                { name: "Mark Jones", role: "CEO, HealthSolutions Ltd.", quote: "The team at CURE<sup>d.</sup> is truly exceptional. They stepped in with a tailored solution that saved us time and money. Their products are top-notch.", image: "https://placehold.co/100x100/dcc8bc/ffffff?text=MJ" },
+                { name: "Jane Doe", role: "Supply Chain Manager, MedCorp.", quote: "Reliable, efficient, and professional. CURE<sup>d.</sup> is our first choice for pharmaceutical supplies. They consistently exceed our expectations.", image: "https://placehold.co/100x100/eae1d0/ffffff?text=JD" },
+                { name: "Dr. David Lee", role: "Head of Medical Supply, Global Aid.", quote: "We've been working with CURE<sup>d.</sup> for years, and they are a vital part of our global operations. Their quality and transparency is unmatched.", image: "https://placehold.co/100x100/475e67/ffffff?text=DL" }
+            ];
+            
+            const themeToggle = document.getElementById('theme-toggle');
+            const body = document.body;
+            const lightIcon = document.getElementById('theme-icon-light');
+            const darkIcon = document.getElementById('theme-icon-dark');
+            const applyTheme = (theme) => {
+                body.classList.toggle('dark', theme === 'dark');
+                lightIcon.classList.toggle('hidden', theme === 'dark');
+                darkIcon.classList.toggle('hidden', theme !== 'dark');
+            };
+            themeToggle.addEventListener('click', () => {
+                const newTheme = body.classList.contains('dark') ? 'light' : 'dark';
+                localStorage.setItem('theme', newTheme);
+                applyTheme(newTheme);
+            });
+            applyTheme(localStorage.getItem('theme') || 'light');
+
+            const hamburgerButton = document.getElementById('hamburger-button');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            const toggleSidebar = () => {
+                hamburgerButton.classList.toggle('open');
+                sidebar.classList.toggle('open');
+                sidebarOverlay.classList.toggle('hidden');
+            };
+            hamburgerButton.addEventListener('click', toggleSidebar);
+            sidebarOverlay.addEventListener('click', toggleSidebar);
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (sidebar.classList.contains('open')) toggleSidebar();
+                });
+            });
+            document.querySelectorAll('.contact-scroll-link').forEach(link => {
+                link.addEventListener('click', e => {
+                    e.preventDefault();
+                    document.querySelector(link.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+
+            const animatedPhraseEl = document.getElementById('animated-phrase');
+            const phrases = ["illness, delivering well-being.","challenges with simple solutions.","the future of global health.","with a promise of hope."];
+            let phraseIndex = 0, charIndex = 0;
+            function typePhrase() {
+                if (charIndex < phrases[phraseIndex].length) {
+                    animatedPhraseEl.textContent += phrases[phraseIndex].charAt(charIndex++);
+                    setTimeout(typePhrase, 50);
+                } else {
+                    setTimeout(erasePhrase, 2000);
+                }
+            }
+            function erasePhrase() {
+                if (charIndex > 0) {
+                    animatedPhraseEl.textContent = phrases[phraseIndex].substring(0, --charIndex);
+                    setTimeout(erasePhrase, 30);
+                } else {
+                    phraseIndex = (phraseIndex + 1) % phrases.length;
+                    setTimeout(typePhrase, 500);
+                }
+            }
+            typePhrase();
+            
+            const scrollProgressBar = document.getElementById('scroll-progress-bar');
+            
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPercent = (scrollY / docHeight) * 100;
+                scrollProgressBar.style.width = scrollPercent + '%';
+
+                document.querySelectorAll('.deco-svg').forEach((el, i) => {
+                    const speed = (i % 3 === 0) ? 0.15 : (i % 3 === 1) ? -0.1 : 0.08;
+                    const rotation = (i % 3 === 0) ? 10 : (i % 3 === 1) ? -8 : 5;
+                    el.style.transform = `translateY(${scrollY * speed}px) rotate(${scrollY / rotation}deg)`;
+                });
+                
+            });
+
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const delay = parseInt(entry.target.dataset.delay) || 0;
+                        setTimeout(() => entry.target.classList.add('visible'), delay);
+                        revealObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+            
+            const slideshow = document.getElementById('slideshow');
+            const slideCount = 10;
+            let currentSlide = 0;
+            for (let i = 0; i < slideCount; i++) {
+                slideshow.innerHTML += `<div class="w-full flex-shrink-0"><img src="https://placehold.co/800x500/${['a4b4be','dcc8bc','eae1d0','475e67'][i%4]}/ffffff?text=Facility+${i+1}" class="w-full h-full object-cover"></div>`;
+            }
+            const updateSlidePosition = () => slideshow.style.transform = `translateX(-${currentSlide * 100}%)`;
+            document.getElementById('next-slide').addEventListener('click', () => {
+                currentSlide = (currentSlide + 1) % slideCount;
+                updateSlidePosition();
+            });
+            document.getElementById('prev-slide').addEventListener('click', () => {
+                currentSlide = (currentSlide - 1 + slideCount) % slideCount;
+                updateSlidePosition();
+            });
+
+            const productGrid = document.getElementById('product-grid');
+            const productFilters = document.getElementById('product-filters');
+            const renderProducts = (filter = 'All') => {
+                Array.from(productGrid.children).forEach(child => child.classList.add('is-hiding'));
+                setTimeout(() => {
+                    productGrid.innerHTML = '';
+                    const filteredProducts = filter === 'All' ? products : products.filter(p => p.category === filter);
+                    filteredProducts.forEach(product => {
+                        const card = document.createElement('div');
+                        card.className = "product-card relative bg-secondary p-6 rounded-lg shadow-lg overflow-hidden interactive-card";
+                        card.innerHTML = `<div class="initial-info text-center transition-all duration-400"><h3 class="text-xl font-bold mb-2">${product.name}</h3><p class="text-secondary text-sm">${product.category}</p></div><div class="details absolute inset-0 bg-secondary p-6 flex flex-col justify-center text-center"><p class="text-secondary">${product.description}</p></div>`;
+                        productGrid.appendChild(card);
+                    });
+                }, 300);
+            };
+            const categories = ['All', ...new Set(products.map(p => p.category))];
+            categories.forEach(category => {
+                const button = document.createElement('button');
+                button.textContent = category;
+                button.className = 'px-4 py-2 text-sm font-semibold rounded-full border-2 border-themed';
+                if (category === 'All') button.classList.add('active-filter', 'accent-gradient', 'text-white', 'border-transparent');
+                else button.classList.add('text-primary');
+                button.addEventListener('click', () => {
+                    renderProducts(category);
+                    productFilters.querySelectorAll('button').forEach(btn => btn.classList.remove('active-filter', 'accent-gradient', 'text-white', 'border-transparent'));
+                    button.classList.add('active-filter', 'accent-gradient', 'text-white', 'border-transparent');
+                });
+                productFilters.appendChild(button);
+            });
+            renderProducts();
+            
+            const clientLogosGrid = document.getElementById('client-logos-grid');
+            for(let i=0; i < 8; i++) {
+                clientLogosGrid.innerHTML += `<div class="flex justify-center items-center reveal grayscale hover:grayscale-0 opacity-70 hover:opacity-100 transform hover:scale-110" data-delay="${i*100}"><img src="https://placehold.co/150x80/cccccc/ffffff?text=Partner+${i+1}" alt="Client Logo ${i+1}"></div>`;
+            }
+            
+            const testimonialCarousel = document.getElementById('testimonial-carousel');
+            const testimonialDots = document.getElementById('testimonial-dots');
+            testimonials.forEach((testimonial) => {
+                const slide = document.createElement('div');
+                slide.className = "w-full flex-shrink-0 p-2";
+                slide.innerHTML = `<div class="bg-primary p-8 rounded-lg shadow-xl text-center"><img src="${testimonial.image}" alt="${testimonial.name}" class="w-20 h-20 rounded-full mx-auto mb-4 border-4 border-themed"><p class="text-secondary italic mb-4">"${testimonial.quote}"</p><h4 class="font-bold text-primary">${testimonial.name}</h4><p class="text-sm text-secondary">${testimonial.role}</p></div>`;
+                testimonialCarousel.appendChild(slide);
+                testimonialDots.innerHTML += `<button class="w-3 h-3 rounded-full bg-accent-primary opacity-50"></button>`;
+            });
+            let currentTestimonial = 0;
+            const testimonialSlides = testimonialCarousel.children;
+            const dots = testimonialDots.children;
+            function updateTestimonialPosition() {
+                testimonialCarousel.style.transform = `translateX(-${currentTestimonial * 100}%)`;
+                Array.from(dots).forEach((dot, index) => dot.classList.toggle('opacity-100', index === currentTestimonial));
+            }
+            Array.from(dots).forEach((dot, index) => dot.addEventListener('click', () => {
+                currentTestimonial = index;
+                updateTestimonialPosition();
+            }));
+            document.getElementById('next-testimonial').addEventListener('click', () => {
+                currentTestimonial = (currentTestimonial + 1) % testimonialSlides.length;
+                updateTestimonialPosition();
+            });
+            document.getElementById('prev-testimonial').addEventListener('click', () => {
+                currentTestimonial = (currentTestimonial - 1 + testimonialSlides.length) % testimonialSlides.length;
+                updateTestimonialPosition();
+            });
+            updateTestimonialPosition();
+            
+            const contactForm = document.getElementById('contact-form');
+            const formFeedback = document.getElementById('form-feedback');
+            const inputs = contactForm.querySelectorAll('[required]');
+
+            const showError = (input, message) => {
+                input.classList.add('invalid');
+                const errorEl = input.parentElement.querySelector('.form-error');
+                errorEl.textContent = message;
+            };
+
+            const clearError = (input) => {
+                input.classList.remove('invalid');
+                const errorEl = input.parentElement.querySelector('.form-error');
+                errorEl.textContent = '';
+            };
+            
+            const validateEmail = (email) => {
+                const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(String(email).toLowerCase());
+            };
+
+            const validateForm = () => {
+                let isValid = true;
+                inputs.forEach(input => {
+                    clearError(input);
+                    if (!input.value.trim()) {
+                        showError(input, 'This field is required.');
+                        isValid = false;
+                    } else if (input.type === 'email' && !validateEmail(input.value)) {
+                         showError(input, 'Please enter a valid email address.');
+                        isValid = false;
+                    }
+                });
+                return isValid;
+            };
+
+            inputs.forEach(input => {
+                input.addEventListener('input', () => clearError(input));
+            });
+
+            contactForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (!validateForm()) return;
+
+                formFeedback.textContent = 'Sending...';
+                formFeedback.className = 'text-center mt-4 font-semibold text-secondary';
+                
+                try {
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    formFeedback.textContent = 'Thank you! We have received your message.';
+                    formFeedback.className = 'text-center mt-4 font-semibold text-green-600';
+                    contactForm.reset();
+                } catch (error) {
+                    formFeedback.textContent = 'Sorry, something went wrong. Please try again.';
+                    formFeedback.className = 'text-center mt-4 font-semibold text-red-600';
+                }
+                setTimeout(() => formFeedback.textContent = '', 5000);
+            });
+            
+            // Storytelling Parallax
+            const storyVisualsContainer = document.getElementById('story-visuals');
+            const storyTextSpans = document.querySelectorAll('.story-text');
+            const storyTriggers = document.querySelectorAll('#story-triggers > div');
+
+            const storyVisuals = {
+                '1': `<div class="w-full h-full flex items-center justify-center"><svg class="w-2/3 h-2/3 text-accent-primary" viewBox="0 0 100 100"><circle cx="50" cy="50" r="10" fill="currentColor"/><path d="M50 40 A30 20 0 0 0 50 60 A30 20 0 0 0 50 40" stroke="currentColor" fill="none" stroke-width="2"/></svg></div>`,
+                '2': `<div class="w-full h-full flex items-center justify-center"><svg class="w-2/3 h-2/3 text-accent-secondary" viewBox="0 0 100 100"><rect x="40" y="20" width="20" height="60" rx="10" fill="currentColor"/><rect x="20" y="40" width="60" height="20" rx="10" fill="currentColor"/></svg></div>`,
+                '3': `<div class="w-full h-full flex items-center justify-center"><svg class="w-2/3 h-2/3 text-accent-primary" viewBox="0 0 100 100"><path d="M50 10 L90 30 L90 70 L50 90 L10 70 L10 30 Z" stroke="currentColor" fill="none" stroke-width="2"/><circle cx="50" cy="50" r="5" fill="currentColor"/></svg></div>`
+            };
+            
+            Object.entries(storyVisuals).forEach(([key, svg]) => {
+                const div = document.createElement('div');
+                div.className = 'story-visual';
+                div.dataset.story = key;
+                div.innerHTML = svg;
+                storyVisualsContainer.appendChild(div);
+                
+                // For mobile  view, append to text content
+                const mobileTarget = document.querySelector(`.story-text[data-story='${key}']`).parentElement;
+                const mobileDiv = document.createElement('div');
+                mobileDiv.className = 'md:hidden w-full h-64 my-8 bg-primary rounded-lg flex items-center justify-center';
+                mobileDiv.innerHTML = svg;
+                mobileTarget.appendChild(mobileDiv);
+            });
+            if(window.innerWidth > 768){
+                const storyObserver = new IntersectionObserver(entries => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const storyId = entry.target.dataset.story;
+                            document.querySelectorAll('.story-visual').forEach(el => el.classList.toggle('active', el.dataset.story === storyId));
+                            storyTextSpans.forEach(span => span.classList.toggle('highlight', span.dataset.story === storyId));
+                        }
+                    });
+                }, { threshold: 0.8 });
+                
+                storyTriggers.forEach(trigger => storyObserver.observe(trigger));
+            }
+
+
+            feather.replace();
+        });
+    </script>
+</body>
+</html>
+
